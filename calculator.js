@@ -7,41 +7,48 @@ $(function(){
     let num2 = '';
     let result = '';
     let operations = ['plus', 'minus', 'xmark', 'divide'];
+    let actions = ['delete', 'reset'];
 
     let outputCurrent = $('#outputCurrent');
     let outputLast = $('#outputLast');
 
     $(".btn").on('click', function(){
+        console.log(lastInput)
         let input = $(this).val();
 
         if (operations.includes(input)){    // OPERATIONS
 
-            if (result == ''){
-                if (firstOp){
+            if (operations.includes(lastInput)){        // change operation
+                outputLast.html(num1 + simbols(input));
+            } else if (result == ''){                   // first operation
+                if (firstOp){                           
                     outputLast.html(num1 + simbols(input));
                     firstOp = false;
-                } else {
+                } else {                                // resolve + first operation
                     getResult(input, false);
                 }
-            } else if (result == num1 && !fullResult) {
+            } else if (result == num1 && !fullResult) { // resolve + operation
                 getResult(input, false);
-            } else {
+            } else {                                   // set operation
                 outputLast.html(result + simbols(input));
                 outputCurrent.text(result);
                 num1 = result;
             }
 
+            operation = input;
             fullResult = false;
 
-            operation = input;
             num2 = '';
 
         } else if (input == 'equals'){      // RESOLVE OPERATIONS
             getResult(input, true);
+        } else if (input == 'reset') {      // RESET
+            reset('0');
         } else if (input == 'delete') {     // DELETE ONE NUMBER 
-            if (lastInput == 'equals') {
+            if (lastInput == 'equals') {                // delete history
                 outputLast.html('');
-            } else if (!operations.includes(lastInput) && lastInput != 'delete'){
+            } else if (!operations.includes(lastInput)  
+             && !actions.includes(lastInput)){          // last inpuT: number -> delete digit
                 if (num2 == ''){
                     if (num1.length == 1){
                         num1 = '0';
@@ -58,24 +65,14 @@ $(function(){
                 num2 == '' ? outputCurrent.text(num1) : outputCurrent.text(num2);
             } 
         } else {                            // NUMBERS
-            if (fullResult){
-                num1 = input;
-                result = '';
-                operation = '';
-                outputCurrent.text(num1);
-                outputLast.html('');
-                firstOp = true;
-            } else if (firstOp){
+            if (fullResult){                            // last input: enter -> reset and show number
+                reset(input);
+            } else if (firstOp){                        // first operation -> set n1
                 num1 == 0 ? num1 = input : num1 += input;
                 outputCurrent.text(num1);
-            } else {
-                // if (outputCurrent.text(num1)){
-                //     outputCurrent.text('');
-                // }
+            } else {                                    // set n2 (n1 is previous result)
                 num2 == 0 ? num2 = input : num2 += input;
-
                 outputCurrent.text(num2);
-                
             }
         }
         lastInput = input;
@@ -96,6 +93,16 @@ $(function(){
         } catch(error){
             console.error('Error:', error);
         }
+    }
+
+    function reset(n1){
+        num1 = n1;
+        num2 = '';
+        result = '';
+        operation = '';
+        outputCurrent.text(num1);
+        outputLast.html('');
+        firstOp = true;
     }
 
     function showFullResult(input){
