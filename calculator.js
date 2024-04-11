@@ -2,6 +2,7 @@ $(function(){
     let fullResult = false;
     let firstOp = true;
     let operation = '';
+    lastInput = '';
     let num1 = '0';
     let num2 = '';
     let result = '';
@@ -37,6 +38,25 @@ $(function(){
 
         } else if (input == 'equals'){      // RESOLVE OPERATIONS
             getResult(input, true);
+        } else if (input == 'delete') {     // DELETE ONE NUMBER 
+            if (lastInput == 'equals') {
+                outputLast.html('');
+            } else if (!operations.includes(lastInput) && lastInput != 'delete'){
+                if (num2 == ''){
+                    if (num1.length == 1){
+                        num1 = '0';
+                    } else {
+                        num1 = num1.substring(0, num1.length - 1);
+                    }
+                } else {
+                    if (num2.length == 1){
+                        num2 = '0';
+                    } else {
+                        num2 = num2.substring(0, num2.length - 1);
+                    }
+                }
+                num2 == '' ? outputCurrent.text(num1) : outputCurrent.text(num2);
+            } 
         } else {                            // NUMBERS
             if (fullResult){
                 num1 = input;
@@ -52,11 +72,13 @@ $(function(){
                 // if (outputCurrent.text(num1)){
                 //     outputCurrent.text('');
                 // }
-                num2 += input;
+                num2 == 0 ? num2 = input : num2 += input;
+
                 outputCurrent.text(num2);
                 
             }
         }
+        lastInput = input;
         console.log(num1 + " " + operation + " " + num2 + " " + result);
     })
 
