@@ -101,6 +101,7 @@ $(function(){
         outputCurrent.text(num1);
         outputLast.html('');
         firstOp = true;
+        fullResult = false;
     }
 
     function showFullResult(input){
