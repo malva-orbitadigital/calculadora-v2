@@ -13,7 +13,6 @@ $(function(){
     let outputLast = $('#outputLast');
 
     $(".btn").on('click', function(){
-        console.log(lastInput)
         let input = $(this).val();
 
         if (operations.includes(input)){    // OPERATIONS
@@ -47,8 +46,7 @@ $(function(){
         } else if (input == 'delete') {     // DELETE ONE NUMBER 
             if (lastInput == 'equals') {                // delete history
                 outputLast.html('');
-            } else if (!operations.includes(lastInput)  
-             && !actions.includes(lastInput)){          // last inpuT: number -> delete digit
+            } else if (!operations.includes(lastInput)){          // last input: number -> delete digit
                 if (num2 == ''){
                     if (num1.length == 1){
                         num1 = '0';
