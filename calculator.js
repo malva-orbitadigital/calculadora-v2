@@ -79,7 +79,7 @@ $(function(){
 
     async function getResult(input, fullResult){
         try{
-            const response = await fetch(`http://localhost/calculadora-v2/index.php?num1=${num1}&num2=${num2}&operation=${operation}`,
+            const response = await fetch(`http://localhost/calculadora-v2/calculate.php?num1=${num1}&num2=${num2}&operation=${operation}`,
                 {method:'GET'})
                 
             const data = await response.json();
