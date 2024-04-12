@@ -1,37 +1,22 @@
 <?php
+include_once 'Calculator.php';
 
-$data = [$_GET['num1'], $_GET['num2'], $_GET['operation']];
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 
-$result = doOperation($data[0], $data[1], $data[2]);
+$num1 = $_GET['num1']??'';
+$num2 = $_GET['num2']??'';
+$operation = $_GET['operation']??'';
+
+$calc = new Calculator($num1, $num2, $operation);
+
 send_response([
     'status' => 'success',
-    'result' => $result
+    'result' => $calc->calculate()
 ]);
 
 function send_response($response, $code = 200){
     http_response_code($code);
     die(json_encode($response));
-}
-
-function doOperation($num1, $num2, $operation){
-    if ($operation == ''){
-        return $num1;
-    } else if ($num2 == ''){
-        $num2 = $num1;  
-    } 
-    $n1 = floatval($num1);
-    $n2 = floatval($num2);
-    switch ($operation) {
-        case "plus":
-            return $n1 + $n2;
-        case "minus":
-            return $n1 - $n2;
-        case "xmark":
-            return $n1 * $n2;
-        default:
-            if ($n2 == 0){
-                return "No se puede dividir entre 0";
-            }
-            return $n1 / $n2;
-    }
 }

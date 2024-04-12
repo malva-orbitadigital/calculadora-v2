@@ -3,6 +3,7 @@ $(function(){
     let firstOp = true;
     let operation = '';
     lastInput = '';
+    lastNumInput = '0';
     let num1 = '0';
     let num2 = '';
     let result = '';
@@ -15,7 +16,15 @@ $(function(){
     $(".btn").on('click', function(){
         let input = $(this).val();
 
-        if (operations.includes(input)){    // OPERATIONS
+        if (input == 'equals'){      // RESOLVE OPERATIONS
+            if (lastInput == 'equals'){
+                console.log(num1 + ' ' + num2 + ' ' + result)
+                num2 = lastNumInput;
+            }
+            getResult(input, true);
+        } else if (input == 'reset') {      // RESET
+            reset('0');
+        } else if (operations.includes(input)){    // OPERATIONS
 
             if (operations.includes(lastInput)){        // change operation
                 outputLast.html(num1 + simbols(input));
@@ -39,10 +48,6 @@ $(function(){
 
             num2 = '';
 
-        } else if (input == 'equals'){      // RESOLVE OPERATIONS
-            getResult(input, true);
-        } else if (input == 'reset') {      // RESET
-            reset('0');
         } else if (input == 'delete') {     // DELETE ONE NUMBER 
             if (lastInput == 'equals') {                // delete history
                 outputLast.html('');
@@ -72,11 +77,14 @@ $(function(){
                 num2 == 0 ? num2 = input : num2 += input;
                 outputCurrent.text(num2);
             }
+            lastNumInput = input;
         }
         lastInput = input;
-        console.log(num1 + " " + operation + " " + num2 + " " + result);
+        //console.log(num1 + " " + operation + " " + num2 + " " + result);
     })
 
+
+    // TODO: $.ajax investigar
     async function getResult(input, fullResult){
         try{
             const response = await fetch(`http://localhost/calculadora-v2/calculate.php?num1=${num1}&num2=${num2}&operation=${operation}`,
@@ -92,6 +100,8 @@ $(function(){
             console.error('Error:', error);
         }
     }
+
+
 
     function reset(n1){
         num1 = n1;
